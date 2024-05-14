@@ -3,7 +3,10 @@
 #include <stdint.h>
 #include <string.h>
 
-// unsigned int
+//-------------------------//
+//      unsigned int       //
+//-------------------------//
+
 typedef struct uint8Node uint8Node;
 typedef struct uint16Node uint16Node;
 typedef struct uint32Node uint32Node;
@@ -33,7 +36,10 @@ typedef struct uint64Node
   uint64Node *nextNode;
 } uint64Node;
 
-// signed int
+//-------------------------//
+//       signed int        //
+//-------------------------//
+
 typedef struct int8Node int8Node;
 typedef struct int16Node int16Node;
 typedef struct int32Node int32Node;
@@ -63,7 +69,10 @@ typedef struct int64Node
   int64Node *nextNode;
 } int64Node;
 
-// non-integer
+//-------------------------//
+//       non-integer       //
+//-------------------------//
+
 typedef struct floatNode floatNode;
 typedef struct doubleNode doubleNode;
 
@@ -79,12 +88,17 @@ typedef struct doubleNode
   doubleNode *nextNode;
 } doubleNode;
 
-// uint8 functions
-uint8Node uint8CreateRoot(uint8_t value)
-{
-  uint8Node uint8NewLL = {value, 0};
+//-------------------------//
+//     uint8 functions     //
+//-------------------------//
 
-  return uint8NewLL;
+uint8Node *uint8CreateRoot(uint8_t value)
+{
+  uint8Node *pRoot = malloc(sizeof(uint8Node));
+  pRoot->nextNode = 0;
+  pRoot->value = value;
+
+  return pRoot;
 }
 
 int uint8AddNodeAtIndex(uint8Node *pRoot, uint8_t value, uint64_t index)
@@ -176,24 +190,15 @@ int uint8DeleteNodeAtIndex(uint8Node *pRoot, uint64_t index)
   return 0;
 }
 
-int main()
+int uint8DeleteLinkedList(uint8Node **pRoot)
 {
-  uint8Node root = uint8CreateRoot(20);
-
-  uint8AddNodeAtIndex(&root, 40, 0);
-  uint8AddNodeAtIndex(&root, 60, 0);
-  uint8AddNodeAtIndex(&root, 80, 0);
-  uint8AddNodeAtIndex(&root, 45, 0);
-
-  uint8DeleteNodeAtIndex(&root, 0);
-
-  uint8Node *node = 0;
-
-  for (int i = 0; i < 5; i++)
+  uint8Node *toDeleteNode = 0;
+  while ((*pRoot)->nextNode != 0)
   {
-    node = uint8GetNode(&root, i);
-
-    if (node != 0)
-      printf("%d\n", uint8GetNode(&root, i)->value);
+    toDeleteNode = *pRoot;
+    *pRoot = (*pRoot)->nextNode;
+    free(toDeleteNode);
   }
+  free(*pRoot);
+  *pRoot = 0;
 }
